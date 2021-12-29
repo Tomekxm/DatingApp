@@ -40,8 +40,8 @@ namespace API.Controllers
 
             return new UserDto
             {
-                Username = user.userName,
-                Token = _tokenService.CreateToken(user)
+                username = user.userName,
+                token = _tokenService.CreateToken(user)
             };
 
         }
@@ -63,8 +63,8 @@ namespace API.Controllers
             }
 
               return new UserDto{
-                Username = user.userName,
-                Token = _tokenService.CreateToken(user)
+                username = user.userName,
+                token = _tokenService.CreateToken(user)
             };
         }
 
