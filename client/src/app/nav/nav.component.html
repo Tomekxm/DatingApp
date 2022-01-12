@@ -33,8 +33,10 @@
       *ngIf="accountService.currentUser$ | async as user"
       dropdown
     >
-      <a class="dropdown-toggle text-light" dropdownToggle
-        >Welcome {{ user.username }}</a
+      <img src="{{ user.photoUrl }}" alt="{{ user.username }}" />
+      <a class="dropdown-toggle text-light ms-3" dropdownToggle
+        >Welcome
+        {{ user.username.charAt(0).toUpperCase() + user.username.slice(1) }}</a
       >
       <div class="dropdown-menu mt-4" *dropdownMenu>
         <a class="dropdown-item" routerLink="/member/edit">Edit Profile</a>

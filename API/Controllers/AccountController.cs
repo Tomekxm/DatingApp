@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,13 +25,13 @@ namespace API.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
         {
-            if (await UserExists(registerDto.userName)) return BadRequest("Username is already taken");
+            if (await UserExists(registerDto.userName.ToLower())) return BadRequest("Username is already taken");
 
             using var hmac = new HMACSHA512();
 
             var user = new AppUser
             {
-                userName = registerDto.userName.ToLower(),
+                userName = registerDto.userName,
                 passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.password)),
                 passwordSalt = hmac.Key
             };
@@ -49,7 +50,9 @@ namespace API.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
-            var user = await _context.Users.SingleOrDefaultAsync(x => x.userName == loginDto.userName);
+            var user = await _context.Users
+            .Include(p=> p.Photos)
+            .SingleOrDefaultAsync(x => x.userName == loginDto.userName);
 
             if (user == null) return Unauthorized("Invalid username");
 
@@ -64,7 +67,8 @@ namespace API.Controllers
 
               return new UserDto{
                 username = user.userName,
-                token = _tokenService.CreateToken(user)
+                token = _tokenService.CreateToken(user),
+                photoUrl = user.Photos.FirstOrDefault(x => x.isMain==true)?.url
             };
         }
 
