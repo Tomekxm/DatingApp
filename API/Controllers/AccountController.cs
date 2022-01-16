@@ -6,6 +6,7 @@ using API.Data;
 using API.DTOs;
 using API.Entities;
 using API.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,11 +16,13 @@ namespace API.Controllers
     {
         private readonly ITokenService _tokenService;
         private readonly DataContext _context;
+        private readonly IMapper _mapper;
 
-        public AccountController(DataContext context, ITokenService tokenService)
+        public AccountController(DataContext context, ITokenService tokenService, IMapper mapper)
         {
             _tokenService = tokenService;
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpPost("register")]
@@ -27,14 +30,13 @@ namespace API.Controllers
         {
             if (await UserExists(registerDto.userName.ToLower())) return BadRequest("Username is already taken");
 
+            var user = _mapper.Map<AppUser>(registerDto);
+
             using var hmac = new HMACSHA512();
 
-            var user = new AppUser
-            {
-                userName = registerDto.userName,
-                passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.password)),
-                passwordSalt = hmac.Key
-            };
+                user.userName = registerDto.userName;
+                user.passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.password));
+                user.passwordSalt = hmac.Key;
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
@@ -42,7 +44,8 @@ namespace API.Controllers
             return new UserDto
             {
                 username = user.userName,
-                token = _tokenService.CreateToken(user)
+                token = _tokenService.CreateToken(user),
+                knownAs = user.knownAs
             };
 
         }
@@ -68,7 +71,8 @@ namespace API.Controllers
               return new UserDto{
                 username = user.userName,
                 token = _tokenService.CreateToken(user),
-                photoUrl = user.Photos.FirstOrDefault(x => x.isMain==true)?.url
+                photoUrl = user.Photos.FirstOrDefault(x => x.isMain==true)?.url,
+                knownAs = user.knownAs
             };
         }
 
