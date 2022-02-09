@@ -22,7 +22,9 @@ namespace API.Entities
         public string interests { get; set; }
         public string city { get; set; }
         public string country { get; set; }
-        public ICollection<Photo> Photos { get; set;}
-    }
+        public ICollection<Photo> Photos { get; set; }
+        public ICollection<UserLike> likedByUsers { get; set; }
+        public ICollection<UserLike> likedUsers { get; set; }
+}
     
 }
