@@ -1,0 +1,12 @@
+.img-circle {
+    max-width: 50px;
+}
+
+.btn.btn-danger:not(:hover) {
+    background-color: #e95420;
+    
+}
+
+* {
+    font-size: 110%;
+}
