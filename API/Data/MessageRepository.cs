@@ -49,9 +49,9 @@ namespace API.Data
 
             query = messageParams.container switch
             {
-                "Inbox" => query.Where(u => u.recipient.userName == messageParams.username && u.recipientDeleted == false),
-                "Outbox" => query.Where(u => u.sender.userName == messageParams.username && u.senderDeleted == false),
-                _ => query.Where(u => u.recipient.userName ==
+                "Inbox" => query.Where(u => u.recipient.UserName == messageParams.username && u.recipientDeleted == false),
+                "Outbox" => query.Where(u => u.sender.UserName == messageParams.username && u.senderDeleted == false),
+                _ => query.Where(u => u.recipient.UserName ==
                  messageParams.username && u.recipientDeleted == false && u.dateRead == null)
             };
 
@@ -65,17 +65,17 @@ namespace API.Data
             var messages = await _context.Messages
                 .Include(u => u.sender).ThenInclude(p => p.Photos)
                 .Include(u => u.recipient).ThenInclude(p => p.Photos)
-                .Where(m => m.recipient.userName == currentUsername
+                .Where(m => m.recipient.UserName == currentUsername
                     && m.recipientDeleted == false
-                    && (m.sender.userName == recipientUsername
-                    || m.recipient.userName == recipientUsername)
-                    && m.sender.userName == currentUsername
+                    && (m.sender.UserName == recipientUsername
+                    || m.recipient.UserName == recipientUsername)
+                    && m.sender.UserName == currentUsername
                     && m.senderDeleted == false
                  )
                  .OrderBy(m => m.messageSent)
                  .ToListAsync();
 
-            var unreadMessages = messages.Where(m => m.dateRead == null && m.recipient.userName == currentUsername).ToList();
+            var unreadMessages = messages.Where(m => m.dateRead == null && m.recipient.UserName == currentUsername).ToList();
 
             if (unreadMessages.Any())
             {

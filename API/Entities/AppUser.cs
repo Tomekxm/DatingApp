@@ -1,16 +1,11 @@
 using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
 
 namespace API.Entities
 {
-    public class AppUser
+    public class AppUser : IdentityUser<int>
     {
-        public int id { get; set; }
-        public string userName { get; set; }
-
-        public byte[] passwordHash { get; set; }
-        public byte[] passwordSalt { get; set; }
-
         public DateTime dateOfBirth { get; set; }
 
         public string knownAs { get; set; }
@@ -27,6 +22,7 @@ namespace API.Entities
         public ICollection<UserLike> likedUsers { get; set; }
         public ICollection<Message> messagesSent { get; set; }
         public ICollection<Message> messagesReceived { get; set; }
+        public ICollection<AppUserRole> userRoles { get; set; }
 }
     
 }
