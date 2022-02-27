@@ -34,12 +34,13 @@ namespace API.Controllers
             var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername());
             userParams.currentUserName = user.UserName;
 
-            if (string.IsNullOrEmpty(userParams.gender)){
-                userParams.gender = user.gender == "male"? "female" : "male";
+            if (string.IsNullOrEmpty(userParams.gender))
+            {
+                userParams.gender = user.gender == "male" ? "female" : "male";
             }
             var users = await _userRepository.GetMembersAsync(userParams);
 
-            Response.AddPaginationHeader(users.currentPage, users.pageSize, 
+            Response.AddPaginationHeader(users.currentPage, users.pageSize,
                 users.totalCount, users.totalPages);
 
             return Ok(users);

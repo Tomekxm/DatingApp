@@ -36,14 +36,18 @@ namespace API.Controllers
 
             user.UserName = registerDto.userName;
 
-            var result = await _userManager.CreateAsync(user,registerDto.password);
+            var result = await _userManager.CreateAsync(user, registerDto.password);
 
-            if(!result.Succeeded) return BadRequest(result.Errors);
+            if (!result.Succeeded) return BadRequest(result.Errors);
+
+            var roleResult = await _userManager.AddToRoleAsync(user, "Member");
+
+            if (!roleResult.Succeeded) return BadRequest(roleResult.Errors);
 
             return new UserDto
             {
                 username = user.UserName,
-                token = _tokenService.CreateToken(user),
+                token = await _tokenService.CreateToken(user),
                 knownAs = user.knownAs,
                 gender = user.gender
             };
@@ -61,12 +65,12 @@ namespace API.Controllers
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.password, false);
 
-            if(!result.Succeeded) return Unauthorized();
+            if (!result.Succeeded) return Unauthorized();
 
             return new UserDto
             {
                 username = user.UserName,
-                token = _tokenService.CreateToken(user),
+                token = await _tokenService.CreateToken(user),
                 photoUrl = user.Photos.FirstOrDefault(x => x.isMain == true)?.url,
                 knownAs = user.knownAs,
                 gender = user.gender
