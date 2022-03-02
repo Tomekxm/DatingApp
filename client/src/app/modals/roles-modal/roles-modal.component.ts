@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { User } from 'src/app/_models/user';
+
 
 @Component({
   selector: 'app-roles-modal',
@@ -9,7 +9,7 @@ import { User } from 'src/app/_models/user';
 })
 export class RolesModalComponent implements OnInit {
   @Input() updateSelectedRoles = new EventEmitter();
-  user: User;
+  user: any;
   roles: any[];
 
   constructor(public bsModalRef: BsModalRef) { }
@@ -19,6 +19,7 @@ export class RolesModalComponent implements OnInit {
 
   updateRoles() {
     this.updateSelectedRoles.emit(this.roles);
+    console.log(this.roles);
     this.bsModalRef.hide();
   }
 

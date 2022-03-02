@@ -42,6 +42,8 @@ namespace API.Controllers
 
             var user = await _userManager.FindByNameAsync(username);
 
+            if (user == null) return NotFound("Could not find user");
+
             var userRoles = await _userManager.GetRolesAsync(user);
 
             var result = await _userManager.AddToRolesAsync(user, selectedRoles.Except(userRoles));

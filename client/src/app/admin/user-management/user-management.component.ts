@@ -25,13 +25,14 @@ export class UserManagementComponent implements OnInit {
     })
   }
 
-  openRolesModal(user: User) {
+  openRolesModal(user: any) {
     const config = {
       class: 'modal-dialog-centered',
       initialState: {
         user,
         roles: this.getRolesArray(user)
-      }
+      },
+      animated: false
     }
     this.bsModalRef = this.modalService.show(RolesModalComponent, config);
     this.bsModalRef.content.updateSelectedRoles.subscribe(values => {
@@ -39,20 +40,22 @@ export class UserManagementComponent implements OnInit {
         roles: [...values.filter(el => el.checked === true).map(el => el.name)]
       };
       if (rolesToUpdate) {
-        this.adminService.updateUserRoles(user.username, rolesToUpdate.roles).subscribe(() => {
+        console.log(user);
+        this.adminService.updateUserRoles(user.userName, rolesToUpdate.roles).subscribe(() => {
           user.roles = [...rolesToUpdate.roles]
         })
       }
     })
+    console.log(user);
   }
 
   private getRolesArray(user) {
     const roles = [];
     const userRoles = user.roles;
     const availableRoles: any[] = [
-      { name: 'Admin', value: 'Admin' },
-      { name: 'Moderator', value: 'Moderator' },
-      { name: 'Member', value: 'Member' }
+      {name: 'Admin', value: 'Admin'},
+      {name: 'Moderator', value: 'Moderator'},
+      {name: 'Member', value: 'Member'}
     ];
 
     availableRoles.forEach(role => {
