@@ -68,7 +68,7 @@ namespace API.Controllers
 
             Response.AddPaginationHeader(messages.currentPage, messages.pageSize, messages.totalCount, messages.totalPages);
 
-            return Ok(messages);
+            return messages;
         }
 
         [HttpGet("thread/{username}")]
