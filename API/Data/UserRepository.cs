@@ -42,9 +42,9 @@ namespace API.Data
             var maxDob = DateTime.Today.AddYears(-userParams.minAge);
 
 
-            query = query.Where(u =>u.dateOfBirth >= minDob && u.dateOfBirth <= maxDob);
+            query = query.Where(u => u.dateOfBirth >= minDob && u.dateOfBirth <= maxDob);
 
-            query = userParams.orderBy switch 
+            query = userParams.orderBy switch
             {
                 "created" => query.OrderByDescending(u => u.created),
                 "lastActive" => query.OrderByDescending(u => u.lastActive),
@@ -72,11 +72,6 @@ namespace API.Data
             return await _context.Users
             .Include(p => p.Photos)
             .ToListAsync();
-        }
-
-        public async Task<bool> SaveAllAsync()
-        {
-            return await _context.SaveChangesAsync() > 0;
         }
 
         public void Update(AppUser user)
