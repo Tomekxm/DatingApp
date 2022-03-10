@@ -31,12 +31,12 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers([FromQuery] UserParams userParams)
         {
-            var user = await _unitOfWork.UserRepository.GetUserByUsernameAsync(User.GetUsername());
-            userParams.currentUserName = user.UserName;
+            var gender = await _unitOfWork.UserRepository.GetUserGender(User.GetUsername());
+            userParams.currentUserName = User.GetUsername();
 
             if (string.IsNullOrEmpty(userParams.gender))
             {
-                userParams.gender = user.gender == "male" ? "female" : "male";
+                userParams.gender = gender == "male" ? "female" : "male";
             }
             var users = await _unitOfWork.UserRepository.GetMembersAsync(userParams);
 
