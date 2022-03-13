@@ -31,7 +31,7 @@ namespace API.Controllers
                 return BadRequest("Message must have its recipient and content");
             }
 
-            if (username == createMessageDto.recipientUsername.ToLower())
+            if (username == createMessageDto.recipientUsername)
             {
                 return BadRequest("You cannot send messages to yourself");
             }

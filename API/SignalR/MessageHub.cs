@@ -60,7 +60,7 @@ namespace API.SignalR
                 throw new HubException("Message must have its recipient and content");
             }
 
-            if (username == createMessageDto.recipientUsername.ToLower())
+            if (username == createMessageDto.recipientUsername)
             {
                 throw new HubException("You cannot send messages to yourself");
             }
