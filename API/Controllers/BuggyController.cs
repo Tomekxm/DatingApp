@@ -4,20 +4,14 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
-{
+{ 
+    [Authorize(Policy = "RequireAdminRole")]
     public class BuggyController : BaseApiController
     {
         private readonly DataContext _context;
         public BuggyController(DataContext context)
         {
             _context = context;
-        }
-
-        [Authorize]
-        [HttpGet("auth")]
-        public ActionResult<string> GetSecret()
-        {
-            return "secret text";
         }
 
         [HttpGet("not-found")]
